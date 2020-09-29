@@ -1,0 +1,39 @@
+{
+  "name": "quick-notes",
+  "version": "0.0.1",
+  "description": "The application is intended to store notes and share for everyone publicly",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "NODE_ENV=development nodemon src/app.js",
+    "start": "NODE_ENV=production node src/app.js",
+    "lint": "eslint src/ --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stanisdev/quick-notes.git"
+  },
+  "keywords": [
+    "node.js",
+    "mysql",
+    "express",
+    "sequelize"
+  ],
+  "author": "Stanislav Zavalishin <javascript.nodejs.developer@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stanisdev/quick-notes/issues"
+  },
+  "homepage": "https://github.com/stanisdev/quick-notes#readme",
+  "dependencies": {
+    "ajv": "6.12.5",
+    "express": "4.17.1",
+    "make-promises-safe": "^5.1.0",
+    "sequelize": "6.3.5"
+  },
+  "devDependencies": {
+    "eslint": "^7.10.0",
+    "nodemon": "^2.0.4",
+    "sequelize-cli": "6.2.0"
+  }
+}
