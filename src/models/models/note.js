@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Note.belongsTo(models.User);
     }
-  };
+  }
 
   Note.init({
     content: {

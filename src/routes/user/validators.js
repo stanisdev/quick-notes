@@ -1,20 +1,24 @@
 'use strict';
 
-const validators = {
-  login: {
-    type: 'object',
-    properties: {
-      username: {
-        type: 'string',
-        maximum: 5,
-        maximum: 20
-      },
-      password: {
-        type: 'string'
-      }
+const credentials = {
+  type: 'object',
+  properties: {
+    username: {
+      type: 'string',
+      minLength: 3,
+      maxLength: 20
     },
-    required: ['username', 'password']
-  }
+    password: {
+      type: 'string',
+      minLength: 3
+    }
+  },
+  required: ['username', 'password']
+};
+
+const validators = {
+  login: credentials,
+  register: credentials
 };
 
 module.exports = validators;

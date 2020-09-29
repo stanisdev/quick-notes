@@ -7,6 +7,7 @@ const routes = (app) => {
   const services = app.get('services');
   const { routesDir } = app.get('config');
   const { wrapper, validate } = services;
+  const middlewares = app.get('middlewares');
 
   fs.readdirSync(routesDir).forEach(dirName => {
 
@@ -24,7 +25,7 @@ const routes = (app) => {
     Object.getOwnPropertyNames(Class.prototype)
       .filter(m => m != 'constructor')
       .forEach(metaData => {
-        let [httpMethod, url] = metaData.split(' ');
+        let [httpMethod, url, , filter] = metaData.split(' ');
 
         let prefix = '';
         if (typeof instance.prefix == 'string') {
@@ -42,6 +43,14 @@ const routes = (app) => {
         const params = [prefix + url];
         if (schema instanceof Object) {
           params.push(validate(schema, httpMethod));
+        }
+        if (filter === 'auth') { // @todo: move to separate method
+          /**
+           * We are supposed to grant access to the object of services
+           */
+          params.push(
+            wrapper(middlewares.auth.bind(app))
+          );
         }
         params.push(handler);
         app[ httpMethod.toLowerCase() ](...params);

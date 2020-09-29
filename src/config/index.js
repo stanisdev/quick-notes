@@ -9,7 +9,12 @@ const config = {
   loadersDir: join(rootDir, 'loaders'),
   routesDir: join(rootDir, 'routes'),
   modelsDir: join(rootDir, 'models'),
-  servicesDir: join(rootDir, 'services')
+  servicesDir: join(rootDir, 'services'),
+  middlewaresDir: join(rootDir, 'middlewares'),
+  jwt: {
+    secretKey: 'XeyjzSwLzarcLkmkyCR7A2zYfdTCcL',
+    expiration: '?' // @todo: use it
+  }
 };
 
 module.exports = config;
