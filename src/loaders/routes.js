@@ -4,13 +4,19 @@ const fs = require('fs');
 const { join } = require('path');
 
 const routes = (app) => {
+  const services = app.get('services');
   const { routesDir } = app.get('config');
-  const { wrapper } = app.get('services');
+  const { wrapper, validate } = services;
 
   fs.readdirSync(routesDir).forEach(dirName => {
 
-    const Class = require(join(routesDir, dirName));
-    const instance = new Class({});
+    const routeDir = join(routesDir, dirName);
+    const Class = require(routeDir);
+    const validators = require(join(routeDir, 'validators'));
+    const instance = new Class({
+      db: app.get('db'),
+      services
+    });
 
     /**
      * Iterate through the methods of the class
@@ -27,9 +33,18 @@ const routes = (app) => {
           prefix = `/${dirName}`;
         }
 
-        url = prefix + url;
-        const handler = wrapper(instance[metaData]);
-        app[httpMethod.toLowerCase()](url, handler);
+        /**
+         * Assign the handler and define validator middleware
+         */
+        const schema = validators[url.slice(1)];
+        const handler = wrapper(instance[metaData].bind(instance));
+
+        const params = [prefix + url];
+        if (schema instanceof Object) {
+          params.push(validate(schema, httpMethod));
+        }
+        params.push(handler);
+        app[ httpMethod.toLowerCase() ](...params);
       });
   });
 };

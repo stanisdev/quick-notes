@@ -3,12 +3,22 @@
 require('make-promises-safe');
 
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 
 const config = require('./config');
 app.set('config', config);
-require(config.loadersDir)(app);
+app.use(bodyParser.json())
 
-app.listen(config.port, () => {
-  console.log(`server listening on ${config.port}`);
+const start = async () => {
+  await require(config.loadersDir)(app);
+
+  app.listen(config.port, () => {
+    console.log(`server listening on ${config.port}`);
+  });
+};
+
+start().catch(error => {
+  console.error(error); // @todo: replace by another logger
+  process.exit(1);
 });
