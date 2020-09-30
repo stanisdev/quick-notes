@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * Schema of credentials
+ */
 const credentials = {
   type: 'object',
   properties: {
@@ -16,9 +19,16 @@ const credentials = {
   required: ['username', 'password']
 };
 
+/**
+ * Validators of user endpoints
+ */
 const validators = {
-  login: credentials,
-  register: credentials
+  ['POST /login']: {
+    body: credentials
+  },
+  ['POST /register']: {
+    body: credentials
+  }
 };
 
 module.exports = validators;

@@ -9,9 +9,6 @@ module.exports = (fn) => {
    */
   return (req, res, next) => {
     Promise.resolve(fn(req, res, next))
-      .then(data => {
-        res.send(data);
-      })
       .catch(error => {
         console.error(error); // @todo: add a logger
 

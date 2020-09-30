@@ -10,7 +10,7 @@ class User {
   /**
    * Login by username/password
    */
-  async ['POST /login']({ body }) {
+  async ['POST /login']({ body }, res) {
     const { username, password } = body;
 
     const user = await this.db.User.findByUsername(username);
@@ -18,19 +18,19 @@ class User {
       throw this.services.boom.badRequest('Wrong login/password');
     }
     const token = await this.services.jwt.sign({ id: user.id });
-    return { token };
+    res.send({ token });
   }
 
   /**
    * Registration of the new user
    */
-  async ['POST /register']({ body }) {
+  async ['POST /register']({ body }, res) {
     const user = await this.db.User.findByUsername(body.username);
     if (user instanceof Object) {
       throw this.services.boom.conflict('Pick up another username as the entered one already exists');
     }
     await this.db.User.createNew(body);
-    return { ok: true };
+    res.send({ ok: true });
   }
 }
 

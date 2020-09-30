@@ -14,6 +14,12 @@ const config = {
   jwt: {
     secretKey: 'XeyjzSwLzarcLkmkyCR7A2zYfdTCcL',
     expiration: '?' // @todo: use it
+  },
+  notes: {
+    limit: {
+      default: 10,
+      maximum: 30
+    }
   }
 };
 

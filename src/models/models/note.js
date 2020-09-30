@@ -7,6 +7,24 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Note.belongsTo(models.User);
     }
+    /**
+     * Create the new note
+     */
+    static createNew(content, userId) {
+      return this.create({ content, userId });
+    }
+    /**
+     * Get list of notes
+     */
+    static getMany({ userId, limit, offset }) {
+      return this.findAll({
+        where: { userId },
+        attributes: ['id', 'content', 'createdAt', 'updatedAt'],
+        limit,
+        offset,
+        raw: true
+      });
+    }
   }
 
   Note.init({

@@ -5,18 +5,18 @@ const { join } = require('path');
 
 const routes = (app) => {
   const services = app.get('services');
-  const { routesDir } = app.get('config');
+  const config = app.get('config');
   const { wrapper, validate } = services;
-  const middlewares = app.get('middlewares');
 
-  fs.readdirSync(routesDir).forEach(dirName => {
+  fs.readdirSync(config.routesDir).forEach(dirName => {
 
-    const routeDir = join(routesDir, dirName);
+    const routeDir = join(config.routesDir, dirName);
     const Class = require(routeDir);
     const validators = require(join(routeDir, 'validators'));
     const instance = new Class({
       db: app.get('db'),
-      services
+      services,
+      config
     });
 
     /**
@@ -25,7 +25,7 @@ const routes = (app) => {
     Object.getOwnPropertyNames(Class.prototype)
       .filter(m => m != 'constructor')
       .forEach(metaData => {
-        let [httpMethod, url, , filter] = metaData.split(' ');
+        const [httpMethod, url, , ...middlewares] = metaData.split(/\s+/);
 
         let prefix = '';
         if (typeof instance.prefix == 'string') {
@@ -37,20 +37,21 @@ const routes = (app) => {
         /**
          * Assign the handler and define validator middleware
          */
-        const schema = validators[url.slice(1)];
+        const [validatorName] = metaData.split(' |');
+        const validator = validators[validatorName];
         const handler = wrapper(instance[metaData].bind(instance));
 
         const params = [prefix + url];
-        if (schema instanceof Object) {
-          params.push(validate(schema, httpMethod));
+        if (validator instanceof Object) {
+          params.push(validate(validator));
         }
-        if (filter === 'auth') { // @todo: move to separate method
-          /**
-           * We are supposed to grant access to the object of services
-           */
-          params.push(
-            wrapper(middlewares.auth.bind(app))
-          );
+
+        if (middlewares.length > 0) {
+          middlewares.forEach(name => {
+            name = name.replace(',' ,'').trim();
+            const handler = app.get('middlewares')[name].bind(app);
+            params.push(wrapper(handler));
+          });
         }
         params.push(handler);
         app[ httpMethod.toLowerCase() ](...params);
