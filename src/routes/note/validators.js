@@ -18,6 +18,19 @@ const note = {
 };
 
 /**
+ * Schema of ID
+ */
+const id = {
+  type: 'object',
+  properties: {
+    id: {
+      type: 'integer',
+      minimum: 1
+    }
+  }
+};
+
+/**
  * Validators of note endpoints
  */
 const validators = {
@@ -42,12 +55,29 @@ const validators = {
   },
   ['PUT /:id']: {
     body: note,
+    params: id
+  },
+  ['GET /share/:id']: {
+    params: id,
+    query: {
+      type: 'object',
+      properties: {
+        state: {
+          type: 'integer',
+          minimum: 0,
+          maximum: 1
+        }
+      }
+    }
+  },
+  ['GET /view/:key']: {
     params: {
       type: 'object',
       properties: {
-        id: {
-          type: 'integer',
-          minimum: 1
+        key: {
+          type: 'string',
+          maxLength: 9,
+          minLength: 9
         }
       }
     }

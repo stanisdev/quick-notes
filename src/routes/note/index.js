@@ -1,9 +1,12 @@
 'use strict';
 
+const { nanoid } = require('nanoid/async');
+
 class Notes {
-  constructor({ db, config }) {
+  constructor({ db, config, services }) {
     this.db = db;
     this.config = config;
+    this.services = services;
     this.prefix = '/note';
   }
 
@@ -29,7 +32,7 @@ class Notes {
       userId: user.id
     }
     const notes = await this.db.Note.getMany(params);
-    res.send({ notes });
+    res.send(notes);
   }
 
   /**
@@ -46,6 +49,34 @@ class Notes {
   async ['DELETE /:id | auth, findNote']({ note }, res) {
     await note.destroy();
     res.send({ ok: true });
+  }
+
+  /**
+   * Change publicity of a note
+   */
+  async ['GET /share/:id | auth, findNote']({ note, query }, res) {
+    let state = 1, key;
+    if (Number.isInteger(query.state)) {
+      state = query.state;
+    }
+    if (state === 1) {
+      key = await nanoid(9);
+    } else {
+      key = null;
+    }    
+    await note.set('publicKey', key).save();
+    res.send({ ok: true });
+  }
+
+  /**
+   * View note by public key
+   */
+  async ['GET /view/:key']({ params }, res) {
+    const note = await this.db.Note.getForPublicView(params.key);
+    if (!(note instanceof Object)) {
+      throw this.services.boom.badRequest('Note not found');
+    }
+    res.send(note);
   }
 
   /**

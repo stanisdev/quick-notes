@@ -25,6 +25,16 @@ module.exports = (sequelize, DataTypes) => {
         raw: true
       });
     }
+    /**
+     * Get note for public view
+     */
+    static getForPublicView(publicKey) {
+      return this.findOne({
+        where: { publicKey },
+        attributes: ['content', 'createdAt'],
+        raw: true
+      });
+    }
   }
 
   Note.init({
@@ -34,6 +44,9 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         len: [1, 1000]
       }
+    },
+    publicKey: {
+      type: DataTypes.CHAR(9)
     },
     userId: {
       type: DataTypes.INTEGER,
