@@ -2,10 +2,22 @@
 
 const { dirname, join } = require('path');
 const rootDir = dirname(__dirname);
-const port = process.env.PORT || 5000;
+const { merge } = require('lodash');
+const env = process.env.NODE_ENV || 'development';
+
+const envs = {
+  development: {
+    port: process.env.PORT || 5000
+  },
+  test: {
+    port: 5001
+  },
+  production: {
+    port: 6000
+  }
+}
 
 const config = {
-  port,
   loadersDir: join(rootDir, 'loaders'),
   routesDir: join(rootDir, 'routes'),
   modelsDir: join(rootDir, 'models'),
@@ -23,4 +35,4 @@ const config = {
   }
 };
 
-module.exports = config;
+module.exports = merge(config, envs[env]);

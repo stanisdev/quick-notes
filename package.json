@@ -4,7 +4,7 @@
   "description": "The application is intended to store notes and share for everyone publicly",
   "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "dev": "NODE_ENV=development nodemon src/app.js",
     "start": "NODE_ENV=production node src/app.js",
     "lint": "eslint src/ --fix"
@@ -33,13 +33,18 @@
     "express": "4.17.1",
     "http-status": "1.4.2",
     "jsonwebtoken": "8.5.1",
+    "lodash": "4.17.20",
     "make-promises-safe": "^5.1.0",
+    "morgan": "^1.10.0",
     "mysql2": "2.2.5",
     "nanoid": "3.1.12",
     "sequelize": "6.3.5"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "eslint": "^7.10.0",
+    "mocha": "^8.1.3",
     "nodemon": "^2.0.4",
     "sequelize-cli": "6.2.0"
   }

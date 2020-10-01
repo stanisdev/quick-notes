@@ -10,7 +10,9 @@ module.exports = (fn) => {
   return (req, res, next) => {
     Promise.resolve(fn(req, res, next))
       .catch(error => {
-        console.error(error); // @todo: add a logger
+        if (env !== 'test') {
+          console.error(error); // @todo: add a logger
+        }
 
         /**
          * This is an error handler which determines what kind
@@ -32,7 +34,7 @@ module.exports = (fn) => {
           error: status[code],
           message
         };
-        res.status(500).send(result);
+        res.status(code).send(result);
       });
   }
 };
