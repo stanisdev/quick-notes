@@ -6,11 +6,13 @@ const EventEmitter = require('events');
 const emitter = new EventEmitter();
 const express = require('express');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 const app = express();
 
 const config = require('./config');
 app.set('config', config);
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+app.use(morgan('tiny'));
 
 const start = async () => {
   await require(config.loadersDir)(app);
@@ -24,6 +26,6 @@ const start = async () => {
 module.exports = { app, emitter };
 
 start().catch(error => {
-  console.error(error); // @todo: replace by another logger
+  console.error(error);
   process.exit(1);
 });

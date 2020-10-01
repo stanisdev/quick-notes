@@ -11,7 +11,7 @@ module.exports = (fn) => {
     Promise.resolve(fn(req, res, next))
       .catch(error => {
         if (env !== 'test') {
-          console.error(error); // @todo: add a logger
+          console.error(error); // @todo: replace by another logger
         }
 
         /**

@@ -4,7 +4,7 @@
   "description": "The application is intended to store notes and share for everyone publicly",
   "main": "src/app.js",
   "scripts": {
-    "test": "mocha",
+    "test": "./test/run.sh",
     "dev": "NODE_ENV=development nodemon src/app.js",
     "start": "NODE_ENV=production node src/app.js",
     "lint": "eslint src/ --fix"

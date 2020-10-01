@@ -25,7 +25,7 @@ const config = {
   middlewaresDir: join(rootDir, 'middlewares'),
   jwt: {
     secretKey: 'XeyjzSwLzarcLkmkyCR7A2zYfdTCcL',
-    expiration: '?' // @todo: use it
+    expiration: 60 * 60 // 1 hour
   },
   notes: {
     limit: {

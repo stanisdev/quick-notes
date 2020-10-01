@@ -136,4 +136,8 @@ describe('User', () => {
       res.body.should.have.property('message');
     });
   });
+
+  after(() => {
+    process.exit();
+  });
 });
